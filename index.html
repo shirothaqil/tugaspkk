@@ -1,0 +1,1850 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMA Nusantara - Website Resmi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hero-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .admin-panel {
+            display: none;
+        }
+        .admin-panel.active {
+            display: block;
+        }
+        .notification-badge {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .message-unread {
+            background-color: #eff6ff;
+            border-left: 4px solid #3b82f6;
+        }
+        .image-preview {
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            padding: 12px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+        .notification.show {
+            transform: translateX(0);
+        }
+        .notification.success {
+            background-color: #10b981;
+        }
+        .notification.error {
+            background-color: #ef4444;
+        }
+        .notification.info {
+            background-color: #3b82f6;
+        }
+        .notification.warning {
+            background-color: #f59e0b;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-3">
+                    <div id="schoolLogoDisplay" class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-graduation-cap text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-800">SMA Nusantara</h1>
+                        <p class="text-sm text-gray-600">Unggul dalam Prestasi</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="text-gray-700 hover:text-blue-600 font-medium">Beranda</a>
+                    <a href="#about" class="text-gray-700 hover:text-blue-600 font-medium">Tentang</a>
+                    <a href="#news" class="text-gray-700 hover:text-blue-600 font-medium">Berita</a>
+                    <a href="#teachers" class="text-gray-700 hover:text-blue-600 font-medium">Guru</a>
+                    <a href="#extracurricular" class="text-gray-700 hover:text-blue-600 font-medium">Ekstrakurikuler</a>
+                    <a href="#admission" class="text-gray-700 hover:text-blue-600 font-medium">PPDB</a>
+                    <a href="#contact" class="text-gray-700 hover:text-blue-600 font-medium">Kontak</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="mobileMenuBtn" class="md:hidden text-gray-700">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <button id="adminBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition relative">
+                        <i class="fas fa-user-shield mr-2"></i>Admin
+                        <span id="messageNotification" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center notification-badge hidden">0</span>
+                    </button>
+                </div>
+            </div>
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="md:hidden hidden bg-white border-t">
+                <div class="px-4 py-2 space-y-2">
+                    <a href="#home" class="block py-2 text-gray-700 hover:text-blue-600">Beranda</a>
+                    <a href="#about" class="block py-2 text-gray-700 hover:text-blue-600">Tentang</a>
+                    <a href="#news" class="block py-2 text-gray-700 hover:text-blue-600">Berita</a>
+                    <a href="#teachers" class="block py-2 text-gray-700 hover:text-blue-600">Guru</a>
+                    <a href="#extracurricular" class="block py-2 text-gray-700 hover:text-blue-600">Ekstrakurikuler</a>
+                    <a href="#admission" class="block py-2 text-gray-700 hover:text-blue-600">PPDB</a>
+                    <a href="#contact" class="block py-2 text-gray-700 hover:text-blue-600">Kontak</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-bg pt-20 pb-32 min-h-screen flex items-center relative overflow-hidden">
+        <div id="heroBackgroundOverlay" class="absolute inset-0 bg-black bg-opacity-40 z-0"></div>
+        <div class="max-w-7xl mx-auto px-4 text-center text-white relative z-10 w-full">
+            <div class="mb-8">
+                <p class="text-lg md:text-xl font-medium mb-4 text-blue-200">🎓 Selamat datang calon siswa berprestasi! 🎓</p>
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">Selamat Datang di<br><span class="text-yellow-300">SMA Nusantara</span></h1>
+                <div class="w-24 h-1 bg-yellow-300 mx-auto mb-8"></div>
+            </div>
+            
+            <div class="mb-12">
+                <p class="text-xl md:text-2xl mb-6 max-w-4xl mx-auto font-light leading-relaxed">Membangun generasi unggul dengan pendidikan berkualitas, karakter kuat, dan prestasi gemilang untuk masa depan Indonesia yang lebih baik.</p>
+                
+                <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-8 text-center">
+                    <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4">
+                        <div class="text-3xl font-bold text-yellow-300">25+</div>
+                        <div class="text-sm">Tahun Pengalaman</div>
+                    </div>
+                    <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4">
+                        <div class="text-3xl font-bold text-yellow-300">1000+</div>
+                        <div class="text-sm">Alumni Sukses</div>
+                    </div>
+                    <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4">
+                        <div class="text-3xl font-bold text-yellow-300">50+</div>
+                        <div class="text-sm">Prestasi Nasional</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row justify-center gap-4 mb-8">
+                <button class="bg-yellow-400 text-gray-800 px-8 py-4 rounded-lg font-semibold hover:bg-yellow-300 transition transform hover:scale-105 shadow-lg">
+                    <i class="fas fa-user-plus mr-2"></i>Daftar Sekarang
+                </button>
+                <button class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition transform hover:scale-105">
+                    <i class="fas fa-play mr-2"></i>Pelajari Lebih Lanjut
+                </button>
+            </div>
+            
+            <div class="text-center">
+                <p class="text-blue-200 mb-4">Bergabunglah dengan keluarga besar SMA Nusantara</p>
+                <div class="flex justify-center space-x-6 text-2xl">
+                    <i class="fab fa-facebook hover:text-blue-400 cursor-pointer transition"></i>
+                    <i class="fab fa-instagram hover:text-pink-400 cursor-pointer transition"></i>
+                    <i class="fab fa-youtube hover:text-red-400 cursor-pointer transition"></i>
+                    <i class="fab fa-whatsapp hover:text-green-400 cursor-pointer transition"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white animate-bounce">
+            <i class="fas fa-chevron-down text-2xl"></i>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Tentang SMA Nusantara</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Sekolah unggulan dengan fasilitas modern dan tenaga pengajar berpengalaman</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center card-hover bg-gray-50 p-6 rounded-xl">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-trophy text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Prestasi Gemilang</h3>
+                    <p class="text-gray-600">Meraih berbagai penghargaan tingkat nasional dan internasional</p>
+                </div>
+                <div class="text-center card-hover bg-gray-50 p-6 rounded-xl">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-users text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Guru Berkualitas</h3>
+                    <p class="text-gray-600">Tenaga pengajar profesional dan berpengalaman puluhan tahun</p>
+                </div>
+                <div class="text-center card-hover bg-gray-50 p-6 rounded-xl">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-building text-purple-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Fasilitas Modern</h3>
+                    <p class="text-gray-600">Laboratorium lengkap, perpustakaan digital, dan ruang kelas ber-AC</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- News Section -->
+    <section id="news" class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Berita Terkini</h2>
+                <p class="text-gray-600">Informasi terbaru seputar kegiatan sekolah</p>
+            </div>
+            <div id="newsContainer" class="grid md:grid-cols-3 gap-8">
+                <!-- News items will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Teachers Section -->
+    <section id="teachers" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Guru & Tenaga Pengajar</h2>
+                <p class="text-gray-600">Tim pengajar profesional dan berpengalaman</p>
+            </div>
+            <div id="teachersContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Teachers will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Extracurricular Section -->
+    <section id="extracurricular" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Ekstrakurikuler</h2>
+                <p class="text-gray-600">Berbagai kegiatan untuk mengembangkan bakat dan minat siswa</p>
+            </div>
+            <div id="extraContainer" class="grid md:grid-cols-4 gap-6">
+                <!-- Extracurricular items will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Admission Section -->
+    <section id="admission" class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Penerimaan Peserta Didik Baru</h2>
+                <p class="text-gray-600">Informasi pendaftaran dan persyaratan masuk</p>
+            </div>
+            
+            <div class="grid lg:grid-cols-2 gap-12 mb-12">
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h3 class="text-2xl font-bold mb-6 text-center">Persyaratan Pendaftaran</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-green-500"></i>
+                            <span>Ijazah SMP/MTs atau sederajat</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-green-500"></i>
+                            <span>Fotokopi Kartu Keluarga</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-green-500"></i>
+                            <span>Fotokopi Akta Kelahiran</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-green-500"></i>
+                            <span>Pas foto 3x4 sebanyak 6 lembar</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-green-500"></i>
+                            <span>Surat Keterangan Sehat</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h3 class="text-2xl font-bold mb-6 text-center">Jadwal Pendaftaran</h3>
+                    <div class="space-y-4">
+                        <div class="border-l-4 border-blue-500 pl-4">
+                            <h4 class="font-semibold">Gelombang 1</h4>
+                            <p class="text-gray-600">1 Januari - 28 Februari 2024</p>
+                        </div>
+                        <div class="border-l-4 border-green-500 pl-4">
+                            <h4 class="font-semibold">Gelombang 2</h4>
+                            <p class="text-gray-600">1 Maret - 30 April 2024</p>
+                        </div>
+                        <div class="border-l-4 border-orange-500 pl-4">
+                            <h4 class="font-semibold">Gelombang 3</h4>
+                            <p class="text-gray-600">1 Mei - 15 Juni 2024</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <h3 class="text-2xl font-bold mb-6 text-center">Daftar Calon Siswa</h3>
+                <div id="admissionContainer" class="overflow-x-auto">
+                    <table class="w-full table-auto">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="px-4 py-3 text-left">No</th>
+                                <th class="px-4 py-3 text-left">Foto</th>
+                                <th class="px-4 py-3 text-left">Nama Lengkap</th>
+                                <th class="px-4 py-3 text-left">Asal Sekolah</th>
+                                <th class="px-4 py-3 text-left">Nilai Rata-rata</th>
+                                <th class="px-4 py-3 text-left">Status</th>
+                                <th class="px-4 py-3 text-left">Tanggal Daftar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admissionList">
+                            <!-- Admission data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-gray-800 text-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid md:grid-cols-2 gap-12">
+                <div>
+                    <h2 class="text-3xl font-bold mb-6">Hubungi Kami</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-map-marker-alt text-blue-400"></i>
+                            <span>Jl. Pendidikan No. 123, Jakarta Selatan 12345</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-phone text-blue-400"></i>
+                            <span>(021) 1234-5678</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-envelope text-blue-400"></i>
+                            <span>info@smanusantara.sch.id</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Kirim Pesan</h3>
+                    <form id="contactForm" class="space-y-4">
+                        <input type="text" id="senderName" placeholder="Nama Lengkap" class="w-full px-4 py-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <input type="email" id="senderEmail" placeholder="Email" class="w-full px-4 py-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <input type="text" id="messageSubject" placeholder="Subjek" class="w-full px-4 py-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <textarea id="messageContent" placeholder="Pesan Anda" rows="4" class="w-full px-4 py-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+                        <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
+                            Kirim Pesan
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Panel Modal -->
+    <div id="adminModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl max-w-6xl w-full max-h-screen overflow-y-auto">
+                <!-- Admin Login -->
+                <div id="adminLogin" class="p-8">
+                    <h2 class="text-2xl font-bold mb-6">Login Admin</h2>
+                    <div class="space-y-4">
+                        <input type="text" id="adminUsername" placeholder="Username" class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="password" id="adminPassword" placeholder="Password" class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <div class="flex space-x-4">
+                            <button id="loginBtn" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">Login</button>
+                            <button id="closeModal" class="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition">Tutup</button>
+                        </div>
+                        <p class="text-sm text-gray-600">Demo: Username: admin, Password: admin123</p>
+                    </div>
+                </div>
+
+                <!-- Admin Dashboard -->
+                <div id="adminDashboard" class="admin-panel p-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold">Dashboard Admin</h2>
+                        <div class="flex space-x-4">
+                            <button id="messagesTab" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition relative">
+                                <i class="fas fa-envelope mr-2"></i>Pesan
+                                <span id="unreadCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+                            </button>
+                            <button id="logoutBtn" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">Logout</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Messages Panel -->
+                    <div id="messagesPanel" class="admin-panel mb-8">
+                        <div class="bg-gray-50 p-6 rounded-xl">
+                            <h3 class="text-xl font-semibold mb-4">Kelola Pesan</h3>
+                            <div class="flex space-x-4 mb-4">
+                                <button id="showAllMessages" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Semua Pesan</button>
+                                <button id="showUnreadMessages" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition">Belum Dibaca</button>
+                                <button id="markAllRead" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">Tandai Semua Dibaca</button>
+                            </div>
+                            <div id="messagesList" class="space-y-3 max-h-96 overflow-y-auto">
+                                <!-- Messages will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content Management Tabs -->
+                    <div id="contentManagement">
+                        <div class="grid lg:grid-cols-2 gap-8">
+                            <!-- News Management -->
+                            <div class="bg-gray-50 p-6 rounded-xl">
+                                <h3 class="text-xl font-semibold mb-4">Kelola Berita</h3>
+                                <div class="space-y-4">
+                                    <input type="text" id="newsTitle" placeholder="Judul Berita" class="w-full px-4 py-2 border rounded-lg">
+                                    <textarea id="newsContent" placeholder="Isi Berita" rows="3" class="w-full px-4 py-2 border rounded-lg"></textarea>
+                                    <input type="file" id="newsImageFile" accept="image/*" class="w-full px-4 py-2 border rounded-lg">
+                                    <div id="newsImagePreview" class="hidden">
+                                        <img id="newsPreviewImg" class="image-preview" alt="Preview">
+                                    </div>
+                                    <div class="flex flex-wrap gap-2">
+                                        <button id="addNews" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">Tambah</button>
+                                        <button id="updateNews" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition hidden">Update</button>
+                                        <button id="cancelEdit" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition hidden">Batal</button>
+                                    </div>
+                                </div>
+                                <div id="newsList" class="mt-6 space-y-2 max-h-60 overflow-y-auto">
+                                    <!-- News list will be populated here -->
+                                </div>
+                            </div>
+
+                            <!-- Teachers Management -->
+                            <div class="bg-gray-50 p-6 rounded-xl">
+                                <h3 class="text-xl font-semibold mb-4">Kelola Guru</h3>
+                                <div class="space-y-4">
+                                    <input type="text" id="teacherName" placeholder="Nama Guru" class="w-full px-4 py-2 border rounded-lg">
+                                    <input type="text" id="teacherSubject" placeholder="Mata Pelajaran" class="w-full px-4 py-2 border rounded-lg">
+                                    <input type="text" id="teacherEducation" placeholder="Pendidikan" class="w-full px-4 py-2 border rounded-lg">
+                                    <input type="text" id="teacherExperience" placeholder="Pengalaman (tahun)" class="w-full px-4 py-2 border rounded-lg">
+                                    <input type="file" id="teacherImageFile" accept="image/*" class="w-full px-4 py-2 border rounded-lg">
+                                    <div id="teacherImagePreview" class="hidden">
+                                        <img id="teacherPreviewImg" class="image-preview" alt="Preview">
+                                    </div>
+                                    <div class="flex flex-wrap gap-2">
+                                        <button id="addTeacher" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">Tambah</button>
+                                        <button id="updateTeacher" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition hidden">Update</button>
+                                        <button id="cancelTeacherEdit" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition hidden">Batal</button>
+                                    </div>
+                                </div>
+                                <div id="teachersList" class="mt-6 space-y-2 max-h-60 overflow-y-auto">
+                                    <!-- Teachers list will be populated here -->
+                                </div>
+                            </div>
+
+                            <!-- Extracurricular Management -->
+                            <div class="bg-gray-50 p-6 rounded-xl">
+                                <h3 class="text-xl font-semibold mb-4">Kelola Ekstrakurikuler</h3>
+                                <div class="space-y-4">
+                                    <input type="text" id="extraName" placeholder="Nama Ekstrakurikuler" class="w-full px-4 py-2 border rounded-lg">
+                                    <textarea id="extraDesc" placeholder="Deskripsi" rows="2" class="w-full px-4 py-2 border rounded-lg"></textarea>
+                                    <input type="text" id="extraIcon" placeholder="Icon (fas fa-music)" class="w-full px-4 py-2 border rounded-lg">
+                                    <input type="file" id="extraImageFile" accept="image/*" class="w-full px-4 py-2 border rounded-lg">
+                                    <div id="extraImagePreview" class="hidden">
+                                        <img id="extraPreviewImg" class="image-preview" alt="Preview">
+                                    </div>
+                                    <div class="flex flex-wrap gap-2">
+                                        <button id="addExtra" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">Tambah</button>
+                                        <button id="updateExtra" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition hidden">Update</button>
+                                        <button id="cancelExtraEdit" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition hidden">Batal</button>
+                                    </div>
+                                </div>
+                                <div id="extraList" class="mt-6 space-y-2 max-h-60 overflow-y-auto">
+                                    <!-- Extra list will be populated here -->
+                                </div>
+                            </div>
+
+                            <!-- School Profile Management -->
+                            <div class="bg-gray-50 p-6 rounded-xl">
+                                <h3 class="text-xl font-semibold mb-4">Profil Sekolah</h3>
+                                <div class="space-y-4">
+                                    <div class="text-center">
+                                        <div id="schoolLogoPreview" class="mb-4">
+                                            <div class="w-24 h-24 bg-blue-600 rounded-full flex items-center justify-center mx-auto">
+                                                <i class="fas fa-graduation-cap text-white text-3xl"></i>
+                                            </div>
+                                        </div>
+                                        <input type="file" id="schoolLogoFile" accept="image/*" class="w-full px-4 py-2 border rounded-lg mb-2">
+                                        <button id="updateSchoolLogo" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Update Logo</button>
+                                    </div>
+
+                                    <div class="border-t pt-4">
+                                        <h4 class="font-semibold mb-3">Background Hero</h4>
+                                        <div id="heroBackgroundPreview" class="mb-4">
+                                            <div class="w-full h-32 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                                                <span class="text-white font-medium">Background Hero Saat Ini</span>
+                                            </div>
+                                        </div>
+                                        <input type="file" id="heroBackgroundFile" accept="image/*" class="w-full px-4 py-2 border rounded-lg mb-2">
+                                        <button id="updateHeroBackground" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition">Update Background Hero</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Admission Management -->
+                            <div class="bg-gray-50 p-6 rounded-xl">
+                                <h3 class="text-xl font-semibold mb-4">Kelola PPDB</h3>
+                                <div class="space-y-4">
+                                    <input type="text" id="studentName" placeholder="Nama Siswa" class="w-full px-4 py-2 border rounded-lg">
+                                    <input type="text" id="studentSchool" placeholder="Asal Sekolah" class="w-full px-4 py-2 border rounded-lg">
+                                    <input type="number" id="studentGrade" placeholder="Nilai Rata-rata" step="0.1" min="0" max="100" class="w-full px-4 py-2 border rounded-lg">
+                                    <select id="studentStatus" class="w-full px-4 py-2 border rounded-lg">
+                                        <option value="Menunggu">Menunggu</option>
+                                        <option value="Diterima">Diterima</option>
+                                        <option value="Ditolak">Ditolak</option>
+                                    </select>
+                                    <input type="file" id="studentImageFile" accept="image/*" class="w-full px-4 py-2 border rounded-lg">
+                                    <div id="studentImagePreview" class="hidden">
+                                        <img id="studentPreviewImg" class="image-preview" alt="Preview">
+                                    </div>
+                                    <div class="flex flex-wrap gap-2">
+                                        <button id="addStudent" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">Tambah</button>
+                                        <button id="updateStudent" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition hidden">Update</button>
+                                        <button id="cancelStudentEdit" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition hidden">Batal</button>
+                                    </div>
+                                </div>
+                                <div id="studentsList" class="mt-6 space-y-2 max-h-60 overflow-y-auto">
+                                    <!-- Students list will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Detail Modal -->
+    <div id="messageDetailModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl max-w-2xl w-full max-h-screen overflow-y-auto">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold">Detail Pesan</h2>
+                        <button id="closeMessageDetail" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    <div id="messageDetailContent">
+                        <!-- Message details will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data Storage (Demo - menggunakan localStorage)
+        let newsData = JSON.parse(localStorage.getItem('schoolNews')) || [
+            {
+                id: 1,
+                title: "Prestasi Gemilang di Olimpiade Sains Nasional",
+                content: "Siswa SMA Nusantara meraih medali emas dalam Olimpiade Sains Nasional bidang Matematika dan Fisika.",
+                image: "",
+                date: "2024-01-15"
+            },
+            {
+                id: 2,
+                title: "Penerimaan Siswa Baru Tahun Ajaran 2024/2025",
+                content: "Pendaftaran siswa baru telah dibuka dengan berbagai jalur masuk dan beasiswa prestasi.",
+                image: "",
+                date: "2024-01-10"
+            },
+            {
+                id: 3,
+                title: "Festival Seni dan Budaya Sekolah",
+                content: "Acara tahunan yang menampilkan kreativitas siswa dalam berbagai bidang seni dan budaya Indonesia.",
+                image: "",
+                date: "2024-01-05"
+            }
+        ];
+
+        let teachersData = JSON.parse(localStorage.getItem('schoolTeachers')) || [
+            {
+                id: 1,
+                name: "Dr. Siti Nurhaliza, M.Pd",
+                subject: "Matematika",
+                education: "S3 Pendidikan Matematika",
+                experience: "15",
+                image: ""
+            },
+            {
+                id: 2,
+                name: "Ahmad Fauzi, S.Si, M.Pd",
+                subject: "Fisika",
+                education: "S2 Pendidikan Fisika",
+                experience: "12",
+                image: ""
+            },
+            {
+                id: 3,
+                name: "Rina Kartika, S.Pd",
+                subject: "Bahasa Indonesia",
+                education: "S1 Pendidikan Bahasa",
+                experience: "10",
+                image: ""
+            },
+            {
+                id: 4,
+                name: "Budi Santoso, M.A",
+                subject: "Bahasa Inggris",
+                education: "S2 Sastra Inggris",
+                experience: "8",
+                image: ""
+            },
+            {
+                id: 5,
+                name: "Dewi Sartika, S.Pd",
+                subject: "Kimia",
+                education: "S1 Pendidikan Kimia",
+                experience: "7",
+                image: ""
+            },
+            {
+                id: 6,
+                name: "Hendra Wijaya, S.Pd",
+                subject: "Biologi",
+                education: "S1 Pendidikan Biologi",
+                experience: "9",
+                image: ""
+            }
+        ];
+
+        let extraData = JSON.parse(localStorage.getItem('schoolExtra')) || [
+            {
+                id: 1,
+                name: "Paduan Suara",
+                description: "Mengembangkan bakat vokal dan harmoni musik",
+                icon: "fas fa-music",
+                image: ""
+            },
+            {
+                id: 2,
+                name: "Basket",
+                description: "Olahraga tim yang mengasah kerjasama",
+                icon: "fas fa-basketball-ball",
+                image: ""
+            },
+            {
+                id: 3,
+                name: "Robotika",
+                description: "Teknologi dan programming untuk masa depan",
+                icon: "fas fa-robot",
+                image: ""
+            },
+            {
+                id: 4,
+                name: "Teater",
+                description: "Seni peran dan ekspresi kreatif",
+                icon: "fas fa-theater-masks",
+                image: ""
+            }
+        ];
+
+        let admissionData = JSON.parse(localStorage.getItem('schoolAdmission')) || [
+            {
+                id: 1,
+                name: "Andi Pratama",
+                school: "SMP Negeri 1 Jakarta",
+                grade: 85.5,
+                status: "Diterima",
+                date: "2024-01-15",
+                image: ""
+            },
+            {
+                id: 2,
+                name: "Sari Indah",
+                school: "SMP Negeri 5 Jakarta",
+                grade: 88.2,
+                status: "Diterima",
+                date: "2024-01-14",
+                image: ""
+            },
+            {
+                id: 3,
+                name: "Budi Setiawan",
+                school: "SMP Swasta Harapan",
+                grade: 82.1,
+                status: "Menunggu",
+                date: "2024-01-13",
+                image: ""
+            },
+            {
+                id: 4,
+                name: "Maya Sari",
+                school: "SMP Negeri 3 Jakarta",
+                grade: 90.5,
+                status: "Diterima",
+                date: "2024-01-12",
+                image: ""
+            }
+        ];
+
+        let messagesData = JSON.parse(localStorage.getItem('schoolMessages')) || [];
+
+        let schoolProfile = JSON.parse(localStorage.getItem('schoolProfile')) || {
+            logo: '',
+            heroBackground: ''
+        };
+
+        let isLoggedIn = false;
+        let editingNewsId = null;
+        let editingExtraId = null;
+        let editingTeacherId = null;
+        let editingStudentId = null;
+        let showingMessages = false;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderNews();
+            renderTeachers();
+            renderExtracurricular();
+            renderAdmission();
+            updateMessageNotification();
+            loadSchoolProfile();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Mobile menu
+            document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+                const mobileMenu = document.getElementById('mobileMenu');
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Admin modal
+            document.getElementById('adminBtn').addEventListener('click', () => {
+                document.getElementById('adminModal').classList.remove('hidden');
+            });
+
+            document.getElementById('closeModal').addEventListener('click', () => {
+                document.getElementById('adminModal').classList.add('hidden');
+            });
+
+            // Admin login
+            document.getElementById('loginBtn').addEventListener('click', login);
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+
+            // Messages
+            document.getElementById('messagesTab').addEventListener('click', toggleMessages);
+            document.getElementById('showAllMessages').addEventListener('click', () => showMessages('all'));
+            document.getElementById('showUnreadMessages').addEventListener('click', () => showMessages('unread'));
+            document.getElementById('markAllRead').addEventListener('click', markAllMessagesRead);
+
+            // Contact form
+            document.getElementById('contactForm').addEventListener('submit', sendMessage);
+
+            // Message detail modal
+            document.getElementById('closeMessageDetail').addEventListener('click', () => {
+                document.getElementById('messageDetailModal').classList.add('hidden');
+            });
+
+            // News management
+            document.getElementById('addNews').addEventListener('click', addNews);
+            document.getElementById('updateNews').addEventListener('click', updateNews);
+            document.getElementById('cancelEdit').addEventListener('click', cancelNewsEdit);
+            document.getElementById('newsImageFile').addEventListener('change', (e) => previewImage(e, 'newsImagePreview', 'newsPreviewImg'));
+
+            // Teachers management
+            document.getElementById('addTeacher').addEventListener('click', addTeacher);
+            document.getElementById('updateTeacher').addEventListener('click', updateTeacher);
+            document.getElementById('cancelTeacherEdit').addEventListener('click', cancelTeacherEdit);
+            document.getElementById('teacherImageFile').addEventListener('change', (e) => previewImage(e, 'teacherImagePreview', 'teacherPreviewImg'));
+
+            // Extra management
+            document.getElementById('addExtra').addEventListener('click', addExtra);
+            document.getElementById('updateExtra').addEventListener('click', updateExtra);
+            document.getElementById('cancelExtraEdit').addEventListener('click', cancelExtraEdit);
+            document.getElementById('extraImageFile').addEventListener('change', (e) => previewImage(e, 'extraImagePreview', 'extraPreviewImg'));
+
+            // Admission management
+            document.getElementById('addStudent').addEventListener('click', addStudent);
+            document.getElementById('updateStudent').addEventListener('click', updateStudent);
+            document.getElementById('cancelStudentEdit').addEventListener('click', cancelStudentEdit);
+            document.getElementById('studentImageFile').addEventListener('change', (e) => previewImage(e, 'studentImagePreview', 'studentPreviewImg'));
+
+            // School profile management
+            document.getElementById('updateSchoolLogo').addEventListener('click', updateSchoolLogo);
+            document.getElementById('schoolLogoFile').addEventListener('change', previewSchoolLogo);
+            document.getElementById('updateHeroBackground').addEventListener('click', updateHeroBackground);
+            document.getElementById('heroBackgroundFile').addEventListener('change', previewHeroBackground);
+
+            // Smooth scrolling
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                    // Close mobile menu after clicking
+                    document.getElementById('mobileMenu').classList.add('hidden');
+                });
+            });
+        }
+
+        function previewImage(event, previewContainerId, previewImgId) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById(previewImgId).src = e.target.result;
+                    document.getElementById(previewContainerId).classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        function sendMessage(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('senderName').value;
+            const email = document.getElementById('senderEmail').value;
+            const subject = document.getElementById('messageSubject').value;
+            const content = document.getElementById('messageContent').value;
+
+            const newMessage = {
+                id: Date.now(),
+                name,
+                email,
+                subject,
+                content,
+                date: new Date().toISOString(),
+                read: false
+            };
+
+            messagesData.unshift(newMessage);
+            localStorage.setItem('schoolMessages', JSON.stringify(messagesData));
+            
+            // Clear form
+            document.getElementById('contactForm').reset();
+            
+            // Update notification
+            updateMessageNotification();
+            
+            alert('Pesan berhasil dikirim! Terima kasih atas pesan Anda.');
+        }
+
+        function updateMessageNotification() {
+            const unreadMessages = messagesData.filter(msg => !msg.read);
+            const notificationBadge = document.getElementById('messageNotification');
+            const unreadCountBadge = document.getElementById('unreadCount');
+            
+            if (unreadMessages.length > 0) {
+                notificationBadge.textContent = unreadMessages.length;
+                notificationBadge.classList.remove('hidden');
+                unreadCountBadge.textContent = unreadMessages.length;
+                unreadCountBadge.classList.remove('hidden');
+            } else {
+                notificationBadge.classList.add('hidden');
+                unreadCountBadge.classList.add('hidden');
+            }
+        }
+
+        function toggleMessages() {
+            showingMessages = !showingMessages;
+            const messagesPanel = document.getElementById('messagesPanel');
+            const contentManagement = document.getElementById('contentManagement');
+            
+            if (showingMessages) {
+                messagesPanel.classList.add('active');
+                contentManagement.style.display = 'none';
+                showMessages('all');
+            } else {
+                messagesPanel.classList.remove('active');
+                contentManagement.style.display = 'block';
+            }
+        }
+
+        function showMessages(filter) {
+            let filteredMessages = messagesData;
+            
+            if (filter === 'unread') {
+                filteredMessages = messagesData.filter(msg => !msg.read);
+            }
+            
+            const container = document.getElementById('messagesList');
+            
+            if (filteredMessages.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-4">Tidak ada pesan</p>';
+                return;
+            }
+            
+            container.innerHTML = filteredMessages.map(message => `
+                <div class="p-4 border rounded-lg ${message.read ? 'bg-white' : 'message-unread'}">
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="flex-1">
+                            <h4 class="font-semibold ${!message.read ? 'text-blue-600' : 'text-gray-800'}">${message.subject}</h4>
+                            <p class="text-sm text-gray-600">Dari: ${message.name} (${message.email})</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            ${!message.read ? '<span class="w-2 h-2 bg-blue-500 rounded-full"></span>' : ''}
+                            <span class="text-xs text-gray-500">${formatDateTime(message.date)}</span>
+                            <button onclick="viewMessageDetails(${message.id})" class="text-blue-600 hover:text-blue-800 mr-2" title="Lihat Detail">
+                                <i class="fas fa-eye text-sm"></i>
+                            </button>
+                            <button onclick="toggleMessageRead(${message.id})" class="text-green-600 hover:text-green-800 mr-2" title="${message.read ? 'Tandai Belum Dibaca' : 'Tandai Dibaca'}">
+                                <i class="fas ${message.read ? 'fa-envelope' : 'fa-envelope-open'} text-sm"></i>
+                            </button>
+                            <button onclick="deleteMessage(${message.id})" class="text-red-600 hover:text-red-800" title="Hapus">
+                                <i class="fas fa-trash text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 text-sm">${message.content.substring(0, 150)}${message.content.length > 150 ? '...' : ''}</p>
+                    ${!message.read ? '<p class="text-xs text-blue-600 mt-2">Pesan belum dibaca</p>' : ''}
+                </div>
+            `).join('');
+        }
+
+        function toggleMessageRead(id) {
+            const messageIndex = messagesData.findIndex(msg => msg.id === id);
+            if (messageIndex !== -1) {
+                const wasRead = messagesData[messageIndex].read;
+                messagesData[messageIndex].read = !messagesData[messageIndex].read;
+                localStorage.setItem('schoolMessages', JSON.stringify(messagesData));
+                updateMessageNotification();
+                showMessages('all');
+                
+                // Show notification
+                const status = messagesData[messageIndex].read ? 'dibaca' : 'belum dibaca';
+                showNotification(`Pesan berhasil ditandai sebagai ${status}!`, 'success');
+            }
+        }
+
+        function deleteMessage(id) {
+            if (confirm('Yakin ingin menghapus pesan ini?')) {
+                messagesData = messagesData.filter(msg => msg.id !== id);
+                localStorage.setItem('schoolMessages', JSON.stringify(messagesData));
+                updateMessageNotification();
+                showMessages('all');
+                showNotification('Pesan berhasil dihapus!', 'success');
+            }
+        }
+
+        function markAllMessagesRead() {
+            const unreadCount = messagesData.filter(msg => !msg.read).length;
+            if (unreadCount === 0) {
+                showNotification('Semua pesan sudah ditandai sebagai dibaca!', 'info');
+                return;
+            }
+            
+            messagesData.forEach(msg => msg.read = true);
+            localStorage.setItem('schoolMessages', JSON.stringify(messagesData));
+            updateMessageNotification();
+            showMessages('all');
+            showNotification(`${unreadCount} pesan berhasil ditandai sebagai dibaca!`, 'success');
+        }
+
+        function viewMessageDetails(id) {
+            const message = messagesData.find(msg => msg.id === id);
+            if (message) {
+                // Mark as read when viewing
+                if (!message.read) {
+                    message.read = true;
+                    localStorage.setItem('schoolMessages', JSON.stringify(messagesData));
+                    updateMessageNotification();
+                }
+
+                const content = document.getElementById('messageDetailContent');
+                content.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="font-semibold text-lg mb-2">${message.subject}</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <span class="font-medium text-gray-600">Pengirim:</span>
+                                    <p class="text-gray-800">${message.name}</p>
+                                </div>
+                                <div>
+                                    <span class="font-medium text-gray-600">Email:</span>
+                                    <p class="text-gray-800">${message.email}</p>
+                                </div>
+                                <div>
+                                    <span class="font-medium text-gray-600">Tanggal:</span>
+                                    <p class="text-gray-800">${formatDateTime(message.date)}</p>
+                                </div>
+                                <div>
+                                    <span class="font-medium text-gray-600">Status:</span>
+                                    <p class="text-gray-800">${message.read ? 'Sudah dibaca' : 'Belum dibaca'}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="font-medium text-gray-600">Isi Pesan:</span>
+                            <div class="mt-2 p-4 bg-white border rounded-lg">
+                                <p class="text-gray-800 whitespace-pre-wrap">${message.content}</p>
+                            </div>
+                        </div>
+                        <div class="flex space-x-3 pt-4 border-t">
+                            <button onclick="replyToMessage('${message.email}', '${message.subject}')" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                                <i class="fas fa-reply mr-2"></i>Balas via Email
+                            </button>
+                            <button onclick="toggleMessageRead(${message.id}); document.getElementById('messageDetailModal').classList.add('hidden'); showMessages('all');" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+                                <i class="fas fa-envelope mr-2"></i>Tandai Belum Dibaca
+                            </button>
+                            <button onclick="deleteMessage(${message.id}); document.getElementById('messageDetailModal').classList.add('hidden'); showMessages('all');" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">
+                                <i class="fas fa-trash mr-2"></i>Hapus
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('messageDetailModal').classList.remove('hidden');
+                showMessages('all'); // Refresh the messages list
+            }
+        }
+
+        function replyToMessage(email, subject) {
+            const replySubject = subject.startsWith('Re: ') ? subject : `Re: ${subject}`;
+            const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(replySubject)}`;
+            window.open(mailtoLink);
+        }
+
+        function login() {
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+
+            // Demo credentials
+            if (username === 'admin' && password === 'admin123') {
+                isLoggedIn = true;
+                document.getElementById('adminLogin').style.display = 'none';
+                document.getElementById('adminDashboard').classList.add('active');
+                renderAdminNews();
+                renderAdminTeachers();
+                renderAdminExtra();
+                renderAdminStudents();
+            } else {
+                alert('Username atau password salah!');
+            }
+        }
+
+        function logout() {
+            isLoggedIn = false;
+            showingMessages = false;
+            document.getElementById('adminLogin').style.display = 'block';
+            document.getElementById('adminDashboard').classList.remove('active');
+            document.getElementById('messagesPanel').classList.remove('active');
+            document.getElementById('contentManagement').style.display = 'block';
+            document.getElementById('adminModal').classList.add('hidden');
+            document.getElementById('adminUsername').value = '';
+            document.getElementById('adminPassword').value = '';
+        }
+
+        function renderNews() {
+            const container = document.getElementById('newsContainer');
+            container.innerHTML = newsData.map(news => `
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                    ${news.image ? `<img src="${news.image}" alt="${news.title}" class="w-full h-48 object-cover" onerror="this.style.display='none'">` : `
+                    <div class="w-full h-48 bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+                        <i class="fas fa-newspaper text-white text-4xl"></i>
+                    </div>`}
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-3">${news.title}</h3>
+                        <p class="text-gray-600 mb-4">${news.content.substring(0, 100)}...</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">${formatDate(news.date)}</span>
+                            <button class="text-blue-600 hover:text-blue-800 font-medium">Baca Selengkapnya</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderTeachers() {
+            const container = document.getElementById('teachersContainer');
+            container.innerHTML = teachersData.map(teacher => `
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center card-hover">
+                    ${teacher.image ? `<img src="${teacher.image}" alt="${teacher.name}" class="w-20 h-20 rounded-full mx-auto mb-4 object-cover">` : `
+                    <div class="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-user-tie text-white text-2xl"></i>
+                    </div>`}
+                    <h3 class="text-lg font-semibold mb-2">${teacher.name}</h3>
+                    <p class="text-blue-600 font-medium mb-1">${teacher.subject}</p>
+                    <p class="text-gray-600 text-sm mb-1">${teacher.education}</p>
+                    <p class="text-gray-500 text-xs">${teacher.experience} tahun pengalaman</p>
+                </div>
+            `).join('');
+        }
+
+        function renderExtracurricular() {
+            const container = document.getElementById('extraContainer');
+            container.innerHTML = extraData.map(extra => `
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center card-hover">
+                    ${extra.image ? `<img src="${extra.image}" alt="${extra.name}" class="w-16 h-16 rounded-lg mx-auto mb-4 object-cover">` : `
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="${extra.icon} text-blue-600 text-2xl"></i>
+                    </div>`}
+                    <h3 class="text-lg font-semibold mb-2">${extra.name}</h3>
+                    <p class="text-gray-600 text-sm">${extra.description}</p>
+                </div>
+            `).join('');
+        }
+
+        function renderAdmission() {
+            const container = document.getElementById('admissionList');
+            container.innerHTML = admissionData.map((student, index) => `
+                <tr class="${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}">
+                    <td class="px-4 py-3">${index + 1}</td>
+                    <td class="px-4 py-3">
+                        ${student.image ? `<img src="${student.image}" alt="${student.name}" class="w-10 h-10 rounded-full object-cover">` : `
+                        <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-gray-600"></i>
+                        </div>`}
+                    </td>
+                    <td class="px-4 py-3 font-medium">${student.name}</td>
+                    <td class="px-4 py-3">${student.school}</td>
+                    <td class="px-4 py-3">${student.grade}</td>
+                    <td class="px-4 py-3">
+                        <span class="px-2 py-1 rounded-full text-xs font-medium ${
+                            student.status === 'Diterima' ? 'bg-green-100 text-green-800' :
+                            student.status === 'Ditolak' ? 'bg-red-100 text-red-800' :
+                            'bg-yellow-100 text-yellow-800'
+                        }">${student.status}</span>
+                    </td>
+                    <td class="px-4 py-3 text-sm text-gray-600">${formatDate(student.date)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderAdminNews() {
+            const container = document.getElementById('newsList');
+            container.innerHTML = newsData.map(news => `
+                <div class="flex justify-between items-center p-3 bg-white rounded-lg">
+                    <div class="flex items-center space-x-3 flex-1">
+                        ${news.image ? `<img src="${news.image}" alt="${news.title}" class="w-12 h-12 rounded object-cover">` : `
+                        <div class="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
+                            <i class="fas fa-newspaper text-gray-500"></i>
+                        </div>`}
+                        <div class="flex-1">
+                            <h4 class="font-medium">${news.title}</h4>
+                            <p class="text-sm text-gray-600">${formatDate(news.date)}</p>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="editNews(${news.id})" class="text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteNews(${news.id})" class="text-red-600 hover:text-red-800">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderAdminTeachers() {
+            const container = document.getElementById('teachersList');
+            container.innerHTML = teachersData.map(teacher => `
+                <div class="flex justify-between items-center p-3 bg-white rounded-lg">
+                    <div class="flex items-center space-x-3 flex-1">
+                        ${teacher.image ? `<img src="${teacher.image}" alt="${teacher.name}" class="w-12 h-12 rounded-full object-cover">` : `
+                        <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user-tie text-gray-500"></i>
+                        </div>`}
+                        <div class="flex-1">
+                            <h4 class="font-medium">${teacher.name}</h4>
+                            <p class="text-sm text-gray-600">${teacher.subject} - ${teacher.experience} tahun</p>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="editTeacher(${teacher.id})" class="text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteTeacher(${teacher.id})" class="text-red-600 hover:text-red-800">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderAdminExtra() {
+            const container = document.getElementById('extraList');
+            container.innerHTML = extraData.map(extra => `
+                <div class="flex justify-between items-center p-3 bg-white rounded-lg">
+                    <div class="flex items-center space-x-3 flex-1">
+                        ${extra.image ? `<img src="${extra.image}" alt="${extra.name}" class="w-12 h-12 rounded object-cover">` : `
+                        <div class="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
+                            <i class="${extra.icon} text-gray-500"></i>
+                        </div>`}
+                        <div class="flex-1">
+                            <h4 class="font-medium">${extra.name}</h4>
+                            <p class="text-sm text-gray-600">${extra.description}</p>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="editExtra(${extra.id})" class="text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteExtra(${extra.id})" class="text-red-600 hover:text-red-800">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderAdminStudents() {
+            const container = document.getElementById('studentsList');
+            container.innerHTML = admissionData.map(student => `
+                <div class="flex justify-between items-center p-3 bg-white rounded-lg">
+                    <div class="flex items-center space-x-3 flex-1">
+                        ${student.image ? `<img src="${student.image}" alt="${student.name}" class="w-12 h-12 rounded-full object-cover">` : `
+                        <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-gray-500"></i>
+                        </div>`}
+                        <div class="flex-1">
+                            <h4 class="font-medium">${student.name}</h4>
+                            <p class="text-sm text-gray-600">${student.school} - ${student.grade} - ${student.status}</p>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="editStudent(${student.id})" class="text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteStudent(${student.id})" class="text-red-600 hover:text-red-800">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function addNews() {
+            const title = document.getElementById('newsTitle').value;
+            const content = document.getElementById('newsContent').value;
+            const imageFile = document.getElementById('newsImageFile').files[0];
+
+            if (!title || !content) {
+                alert('Judul dan isi berita harus diisi!');
+                return;
+            }
+
+            let imageBase64 = '';
+            if (imageFile) {
+                imageBase64 = await fileToBase64(imageFile);
+            }
+
+            const newNews = {
+                id: Date.now(),
+                title,
+                content,
+                image: imageBase64,
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            newsData.unshift(newNews);
+            localStorage.setItem('schoolNews', JSON.stringify(newsData));
+            
+            clearNewsForm();
+            renderNews();
+            renderAdminNews();
+            showNotification('Berita berhasil ditambahkan!', 'success');
+        }
+
+        function editNews(id) {
+            const news = newsData.find(n => n.id === id);
+            if (news) {
+                document.getElementById('newsTitle').value = news.title;
+                document.getElementById('newsContent').value = news.content;
+                
+                if (news.image) {
+                    document.getElementById('newsPreviewImg').src = news.image;
+                    document.getElementById('newsImagePreview').classList.remove('hidden');
+                }
+                
+                editingNewsId = id;
+                document.getElementById('addNews').classList.add('hidden');
+                document.getElementById('updateNews').classList.remove('hidden');
+                document.getElementById('cancelEdit').classList.remove('hidden');
+            }
+        }
+
+        async function updateNews() {
+            const title = document.getElementById('newsTitle').value;
+            const content = document.getElementById('newsContent').value;
+            const imageFile = document.getElementById('newsImageFile').files[0];
+
+            if (!title || !content) {
+                alert('Judul dan isi berita harus diisi!');
+                return;
+            }
+
+            const newsIndex = newsData.findIndex(n => n.id === editingNewsId);
+            if (newsIndex !== -1) {
+                let imageBase64 = newsData[newsIndex].image;
+                if (imageFile) {
+                    imageBase64 = await fileToBase64(imageFile);
+                }
+
+                newsData[newsIndex] = {
+                    ...newsData[newsIndex],
+                    title,
+                    content,
+                    image: imageBase64
+                };
+                
+                localStorage.setItem('schoolNews', JSON.stringify(newsData));
+                cancelNewsEdit();
+                renderNews();
+                renderAdminNews();
+                showNotification('Berita berhasil diperbarui!', 'success');
+            }
+        }
+
+        function deleteNews(id) {
+            if (confirm('Yakin ingin menghapus berita ini?')) {
+                newsData = newsData.filter(n => n.id !== id);
+                localStorage.setItem('schoolNews', JSON.stringify(newsData));
+                renderNews();
+                renderAdminNews();
+                showNotification('Berita berhasil dihapus!', 'success');
+            }
+        }
+
+        function cancelNewsEdit() {
+            editingNewsId = null;
+            clearNewsForm();
+            document.getElementById('addNews').classList.remove('hidden');
+            document.getElementById('updateNews').classList.add('hidden');
+            document.getElementById('cancelEdit').classList.add('hidden');
+        }
+
+        function clearNewsForm() {
+            document.getElementById('newsTitle').value = '';
+            document.getElementById('newsContent').value = '';
+            document.getElementById('newsImageFile').value = '';
+            document.getElementById('newsImagePreview').classList.add('hidden');
+        }
+
+        async function addExtra() {
+            const name = document.getElementById('extraName').value;
+            const description = document.getElementById('extraDesc').value;
+            const icon = document.getElementById('extraIcon').value || 'fas fa-star';
+            const imageFile = document.getElementById('extraImageFile').files[0];
+
+            if (!name || !description) {
+                alert('Nama dan deskripsi ekstrakurikuler harus diisi!');
+                return;
+            }
+
+            let imageBase64 = '';
+            if (imageFile) {
+                imageBase64 = await fileToBase64(imageFile);
+            }
+
+            const newExtra = {
+                id: Date.now(),
+                name,
+                description,
+                icon,
+                image: imageBase64
+            };
+
+            extraData.push(newExtra);
+            localStorage.setItem('schoolExtra', JSON.stringify(extraData));
+            
+            clearExtraForm();
+            renderExtracurricular();
+            renderAdminExtra();
+            showNotification('Ekstrakurikuler berhasil ditambahkan!', 'success');
+        }
+
+        function editExtra(id) {
+            const extra = extraData.find(e => e.id === id);
+            if (extra) {
+                document.getElementById('extraName').value = extra.name;
+                document.getElementById('extraDesc').value = extra.description;
+                document.getElementById('extraIcon').value = extra.icon;
+                
+                if (extra.image) {
+                    document.getElementById('extraPreviewImg').src = extra.image;
+                    document.getElementById('extraImagePreview').classList.remove('hidden');
+                }
+                
+                editingExtraId = id;
+                document.getElementById('addExtra').classList.add('hidden');
+                document.getElementById('updateExtra').classList.remove('hidden');
+                document.getElementById('cancelExtraEdit').classList.remove('hidden');
+            }
+        }
+
+        async function updateExtra() {
+            const name = document.getElementById('extraName').value;
+            const description = document.getElementById('extraDesc').value;
+            const icon = document.getElementById('extraIcon').value || 'fas fa-star';
+            const imageFile = document.getElementById('extraImageFile').files[0];
+
+            if (!name || !description) {
+                alert('Nama dan deskripsi ekstrakurikuler harus diisi!');
+                return;
+            }
+
+            const extraIndex = extraData.findIndex(e => e.id === editingExtraId);
+            if (extraIndex !== -1) {
+                let imageBase64 = extraData[extraIndex].image;
+                if (imageFile) {
+                    imageBase64 = await fileToBase64(imageFile);
+                }
+
+                extraData[extraIndex] = {
+                    ...extraData[extraIndex],
+                    name,
+                    description,
+                    icon,
+                    image: imageBase64
+                };
+                
+                localStorage.setItem('schoolExtra', JSON.stringify(extraData));
+                cancelExtraEdit();
+                renderExtracurricular();
+                renderAdminExtra();
+                showNotification('Ekstrakurikuler berhasil diperbarui!', 'success');
+            }
+        }
+
+        function deleteExtra(id) {
+            if (confirm('Yakin ingin menghapus ekstrakurikuler ini?')) {
+                extraData = extraData.filter(e => e.id !== id);
+                localStorage.setItem('schoolExtra', JSON.stringify(extraData));
+                renderExtracurricular();
+                renderAdminExtra();
+                showNotification('Ekstrakurikuler berhasil dihapus!', 'success');
+            }
+        }
+
+        function cancelExtraEdit() {
+            editingExtraId = null;
+            clearExtraForm();
+            document.getElementById('addExtra').classList.remove('hidden');
+            document.getElementById('updateExtra').classList.add('hidden');
+            document.getElementById('cancelExtraEdit').classList.add('hidden');
+        }
+
+        function clearExtraForm() {
+            document.getElementById('extraName').value = '';
+            document.getElementById('extraDesc').value = '';
+            document.getElementById('extraIcon').value = '';
+            document.getElementById('extraImageFile').value = '';
+            document.getElementById('extraImagePreview').classList.add('hidden');
+        }
+
+        // Teachers CRUD Functions
+        async function addTeacher() {
+            const name = document.getElementById('teacherName').value;
+            const subject = document.getElementById('teacherSubject').value;
+            const education = document.getElementById('teacherEducation').value;
+            const experience = document.getElementById('teacherExperience').value;
+            const imageFile = document.getElementById('teacherImageFile').files[0];
+
+            if (!name || !subject || !education || !experience) {
+                alert('Semua field guru harus diisi!');
+                return;
+            }
+
+            let imageBase64 = '';
+            if (imageFile) {
+                imageBase64 = await fileToBase64(imageFile);
+            }
+
+            const newTeacher = {
+                id: Date.now(),
+                name,
+                subject,
+                education,
+                experience,
+                image: imageBase64
+            };
+
+            teachersData.push(newTeacher);
+            localStorage.setItem('schoolTeachers', JSON.stringify(teachersData));
+            
+            clearTeacherForm();
+            renderTeachers();
+            renderAdminTeachers();
+            showNotification('Data guru berhasil ditambahkan!', 'success');
+        }
+
+        function editTeacher(id) {
+            const teacher = teachersData.find(t => t.id === id);
+            if (teacher) {
+                document.getElementById('teacherName').value = teacher.name;
+                document.getElementById('teacherSubject').value = teacher.subject;
+                document.getElementById('teacherEducation').value = teacher.education;
+                document.getElementById('teacherExperience').value = teacher.experience;
+                
+                if (teacher.image) {
+                    document.getElementById('teacherPreviewImg').src = teacher.image;
+                    document.getElementById('teacherImagePreview').classList.remove('hidden');
+                }
+                
+                editingTeacherId = id;
+                document.getElementById('addTeacher').classList.add('hidden');
+                document.getElementById('updateTeacher').classList.remove('hidden');
+                document.getElementById('cancelTeacherEdit').classList.remove('hidden');
+            }
+        }
+
+        async function updateTeacher() {
+            const name = document.getElementById('teacherName').value;
+            const subject = document.getElementById('teacherSubject').value;
+            const education = document.getElementById('teacherEducation').value;
+            const experience = document.getElementById('teacherExperience').value;
+            const imageFile = document.getElementById('teacherImageFile').files[0];
+
+            if (!name || !subject || !education || !experience) {
+                alert('Semua field guru harus diisi!');
+                return;
+            }
+
+            const teacherIndex = teachersData.findIndex(t => t.id === editingTeacherId);
+            if (teacherIndex !== -1) {
+                let imageBase64 = teachersData[teacherIndex].image;
+                if (imageFile) {
+                    imageBase64 = await fileToBase64(imageFile);
+                }
+
+                teachersData[teacherIndex] = {
+                    ...teachersData[teacherIndex],
+                    name,
+                    subject,
+                    education,
+                    experience,
+                    image: imageBase64
+                };
+                
+                localStorage.setItem('schoolTeachers', JSON.stringify(teachersData));
+                cancelTeacherEdit();
+                renderTeachers();
+                renderAdminTeachers();
+                showNotification('Data guru berhasil diperbarui!', 'success');
+            }
+        }
+
+        function deleteTeacher(id) {
+            if (confirm('Yakin ingin menghapus data guru ini?')) {
+                teachersData = teachersData.filter(t => t.id !== id);
+                localStorage.setItem('schoolTeachers', JSON.stringify(teachersData));
+                renderTeachers();
+                renderAdminTeachers();
+                showNotification('Data guru berhasil dihapus!', 'success');
+            }
+        }
+
+        function cancelTeacherEdit() {
+            editingTeacherId = null;
+            clearTeacherForm();
+            document.getElementById('addTeacher').classList.remove('hidden');
+            document.getElementById('updateTeacher').classList.add('hidden');
+            document.getElementById('cancelTeacherEdit').classList.add('hidden');
+        }
+
+        function clearTeacherForm() {
+            document.getElementById('teacherName').value = '';
+            document.getElementById('teacherSubject').value = '';
+            document.getElementById('teacherEducation').value = '';
+            document.getElementById('teacherExperience').value = '';
+            document.getElementById('teacherImageFile').value = '';
+            document.getElementById('teacherImagePreview').classList.add('hidden');
+        }
+
+        // Students CRUD Functions
+        async function addStudent() {
+            const name = document.getElementById('studentName').value;
+            const school = document.getElementById('studentSchool').value;
+            const grade = document.getElementById('studentGrade').value;
+            const status = document.getElementById('studentStatus').value;
+            const imageFile = document.getElementById('studentImageFile').files[0];
+
+            if (!name || !school || !grade) {
+                alert('Nama, asal sekolah, dan nilai harus diisi!');
+                return;
+            }
+
+            let imageBase64 = '';
+            if (imageFile) {
+                imageBase64 = await fileToBase64(imageFile);
+            }
+
+            const newStudent = {
+                id: Date.now(),
+                name,
+                school,
+                grade: parseFloat(grade),
+                status,
+                date: new Date().toISOString().split('T')[0],
+                image: imageBase64
+            };
+
+            admissionData.unshift(newStudent);
+            localStorage.setItem('schoolAdmission', JSON.stringify(admissionData));
+            
+            clearStudentForm();
+            renderAdmission();
+            renderAdminStudents();
+            showNotification('Data siswa berhasil ditambahkan!', 'success');
+        }
+
+        function editStudent(id) {
+            const student = admissionData.find(s => s.id === id);
+            if (student) {
+                document.getElementById('studentName').value = student.name;
+                document.getElementById('studentSchool').value = student.school;
+                document.getElementById('studentGrade').value = student.grade;
+                document.getElementById('studentStatus').value = student.status;
+                
+                if (student.image) {
+                    document.getElementById('studentPreviewImg').src = student.image;
+                    document.getElementById('studentImagePreview').classList.remove('hidden');
+                }
+                
+                editingStudentId = id;
+                document.getElementById('addStudent').classList.add('hidden');
+                document.getElementById('updateStudent').classList.remove('hidden');
+                document.getElementById('cancelStudentEdit').classList.remove('hidden');
+            }
+        }
+
+        async function updateStudent() {
+            const name = document.getElementById('studentName').value;
+            const school = document.getElementById('studentSchool').value;
+            const grade = document.getElementById('studentGrade').value;
+            const status = document.getElementById('studentStatus').value;
+            const imageFile = document.getElementById('studentImageFile').files[0];
+
+            if (!name || !school || !grade) {
+                alert('Nama, asal sekolah, dan nilai harus diisi!');
+                return;
+            }
+
+            const studentIndex = admissionData.findIndex(s => s.id === editingStudentId);
+            if (studentIndex !== -1) {
+                let imageBase64 = admissionData[studentIndex].image;
+                if (imageFile) {
+                    imageBase64 = await fileToBase64(imageFile);
+                }
+
+                admissionData[studentIndex] = {
+                    ...admissionData[studentIndex],
+                    name,
+                    school,
+                    grade: parseFloat(grade),
+                    status,
+                    image: imageBase64
+                };
+                
+                localStorage.setItem('schoolAdmission', JSON.stringify(admissionData));
+                cancelStudentEdit();
+                renderAdmission();
+                renderAdminStudents();
+                showNotification('Data siswa berhasil diperbarui!', 'success');
+            }
+        }
+
+        function deleteStudent(id) {
+            if (confirm('Yakin ingin menghapus data siswa ini?')) {
+                admissionData = admissionData.filter(s => s.id !== id);
+                localStorage.setItem('schoolAdmission', JSON.stringify(admissionData));
+                renderAdmission();
+                renderAdminStudents();
+            }
+        }
+
+        function cancelStudentEdit() {
+            editingStudentId = null;
+            clearStudentForm();
+            document.getElementById('addStudent').classList.remove('hidden');
+            document.getElementById('updateStudent').classList.add('hidden');
+            document.getElementById('cancelStudentEdit').classList.add('hidden');
+        }
+
+        function clearStudentForm() {
+            document.getElementById('studentName').value = '';
+            document.getElementById('studentSchool').value = '';
+            document.getElementById('studentGrade').value = '';
+            document.getElementById('studentStatus').value = 'Menunggu';
+            document.getElementById('studentImageFile').value = '';
+            document.getElementById('studentImagePreview').classList.add('hidden');
+        }
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('id-ID', options);
+        }
+
+        function formatDateTime(dateString) {
+            const options = { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            return new Date(dateString).toLocaleDateString('id-ID', options);
+        }
+
+        function loadSchoolProfile() {
+            // Load school logo
+            if (schoolProfile.logo) {
+                const logoDisplay = document.getElementById('schoolLogoDisplay');
+                logoDisplay.innerHTML = `<img src="${schoolProfile.logo}" alt="Logo Sekolah" class="w-10 h-10 rounded-full object-cover">`;
+                
+                const logoPreview = document.getElementById('schoolLogoPreview');
+                logoPreview.innerHTML = `<img src="${schoolProfile.logo}" alt="Logo Sekolah" class="w-24 h-24 rounded-full object-cover mx-auto">`;
+            }
+
+            // Load hero background
+            if (schoolProfile.heroBackground) {
+                const heroSection = document.querySelector('#home');
+                heroSection.style.backgroundImage = `url(${schoolProfile.heroBackground})`;
+                heroSection.style.backgroundSize = 'cover';
+                heroSection.style.backgroundPosition = 'center';
+                heroSection.style.backgroundRepeat = 'no-repeat';
+                
+                const heroPreview = document.getElementById('heroBackgroundPreview');
+                heroPreview.innerHTML = `<img src="${schoolProfile.heroBackground}" alt="Background Hero" class="w-full h-32 rounded-lg object-cover">`;
+            }
+        }
+
+        function previewSchoolLogo(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const logoPreview = document.getElementById('schoolLogoPreview');
+                    logoPreview.innerHTML = `<img src="${e.target.result}" alt="Logo Preview" class="w-24 h-24 rounded-full object-cover mx-auto">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function previewHeroBackground(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const heroPreview = document.getElementById('heroBackgroundPreview');
+                    heroPreview.innerHTML = `<img src="${e.target.result}" alt="Background Preview" class="w-full h-32 rounded-lg object-cover">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        async function updateSchoolLogo() {
+            const logoFile = document.getElementById('schoolLogoFile').files[0];
+            
+            if (!logoFile) {
+                showNotification('Pilih file logo terlebih dahulu!', 'warning');
+                return;
+            }
+
+            try {
+                const logoBase64 = await fileToBase64(logoFile);
+                schoolProfile.logo = logoBase64;
+                localStorage.setItem('schoolProfile', JSON.stringify(schoolProfile));
+                
+                // Update logo display in navigation
+                const logoDisplay = document.getElementById('schoolLogoDisplay');
+                logoDisplay.innerHTML = `<img src="${logoBase64}" alt="Logo Sekolah" class="w-10 h-10 rounded-full object-cover">`;
+                
+                showNotification('Logo sekolah berhasil diperbarui!', 'success');
+                document.getElementById('schoolLogoFile').value = '';
+            } catch (error) {
+                showNotification('Gagal mengupload logo!', 'error');
+            }
+        }
+
+        async function updateHeroBackground() {
+            const backgroundFile = document.getElementById('heroBackgroundFile').files[0];
+            
+            if (!backgroundFile) {
+                showNotification('Pilih file background terlebih dahulu!', 'warning');
+                return;
+            }
+
+            try {
+                const backgroundBase64 = await fileToBase64(backgroundFile);
+                schoolProfile.heroBackground = backgroundBase64;
+                localStorage.setItem('schoolProfile', JSON.stringify(schoolProfile));
+                
+                // Update hero background
+                const heroSection = document.querySelector('#home');
+                heroSection.style.backgroundImage = `url(${backgroundBase64})`;
+                heroSection.style.backgroundSize = 'cover';
+                heroSection.style.backgroundPosition = 'center';
+                heroSection.style.backgroundRepeat = 'no-repeat';
+                
+                showNotification('Background hero berhasil diperbarui!', 'success');
+                document.getElementById('heroBackgroundFile').value = '';
+            } catch (error) {
+                showNotification('Gagal mengupload background!', 'error');
+            }
+        }
+
+        function showNotification(message, type = 'success') {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notification => notification.remove());
+
+            // Create new notification
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+
+            document.body.appendChild(notification);
+
+            // Show notification
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+
+            // Hide notification after 3 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97623b7ba234fdf2',t:'MTc1NjM2NzU3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
